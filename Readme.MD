@@ -1,0 +1,39 @@
+
+# Teeth Segmentation by KT-images 
+
+Teeth segmentation using Pytorch and [Monai](https://monai.io/). The data used belong to the (https://ditto.ing.unimore.it/toothfairy2/)
+
+# Data split
+The dataset is composed by 1000 images in total which were randomly divided as 70-20-10% in training, validation, and test set. The split is done by:
+
+    python data_preprocessing.py
+
+which save the dataset lists in the `data.json` file. It stores also the class names and the class weights for the segmentation.
+
+# Model
+
+Simple UNet network created using `monai.netowrks`.
+
+# Training
+    python train.py -md "<model_directory>" -d "mps" -g 0 -bs 16 -lr 1.e-4 -ne 100
+
+This scripts runs the training scrits. It:
+
+- saves the best model at the specified `"<model_directory>"`, 
+- uses the device `"mps"` (but you can use `"cuda"` or `"cpu"`)
+- GPU at position `0`,
+- batch size `16`, 
+- learning rate `1.e-4`,
+- `100` number of maximum epochs.
+
+# Evaluation
+    python evaluation.py -md "<model_directory>" -d "mps" -g 0 -bs 1 
+
+This script computes evaluation over the training, validation, and test dataset saving the dice score per each image in the file `evaluation_results.csv`.
+
+# GUI
+    python gui.py
+
+This scripts runs a simple GUI where the user can upload an image, visualize the model's segmentation prediction, and, in case, save it.
+
+![](gui.gif)
